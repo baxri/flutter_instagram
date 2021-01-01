@@ -7,8 +7,10 @@ import '../utilities/constants.dart';
 import '../models/models.dart';
 import '../screens/screens.dart';
 import '../state/UserState.dart';
+import '../widgets/widgets.dart';
 
 import '../services/database_service.dart';
+import '../services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String userId;
@@ -35,6 +37,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(
               color: Colors.black, fontFamily: 'billabong', fontSize: 35.0),
         ),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () => AuthService.logout(context))
+        ],
       ),
       body: StreamBuilder(
           stream: usersRef.doc(widget.userId).snapshots(),
@@ -159,8 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 10.0),
+                  padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -176,10 +182,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         user.bio ?? 'Bio is empty',
                         style: TextStyle(fontSize: 14.0),
                       ),
-                      Divider(),
                     ],
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Divider(
+                  height: 1.0,
+                ),
+                ProfilePosts(
+                  user: user,
+                ),
               ],
             );
           }),

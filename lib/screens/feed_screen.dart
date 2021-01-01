@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 import '../services/database_service.dart';
-import '../utilities/constants.dart';
+import '../widgets/widgets.dart';
 
 class FeedScreen extends StatefulWidget {
   static const String id = '/feed_screen';
@@ -14,26 +14,6 @@ class FeedScreen extends StatefulWidget {
 
   @override
   _FeedScreenState createState() => _FeedScreenState();
-}
-
-_buildPost(Post post) {
-  return StreamBuilder<DocumentSnapshot>(
-      stream: usersRef.doc(post.authorId).snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.waiting) {
-          final user = User.fromDoc(snapshot.data);
-
-          return Container(
-            height: 200,
-            child: ListTile(
-                title: Text(
-              post.caption,
-            )),
-          );
-        }
-
-        return SizedBox.shrink();
-      });
 }
 
 class _FeedScreenState extends State<FeedScreen> {
@@ -61,13 +41,27 @@ class _FeedScreenState extends State<FeedScreen> {
               );
             }
 
-            return ListView.builder(
-              itemBuilder: (_, index) {
-                final Post post = Post.fromDoc(snapshot.data.docs[index]);
+            if (snapshot.data.docs.length == 0) {
+              return Center(
+                child: Text(
+                  'You do not have posts yest :(',
+                  style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                ),
+              );
+            }
 
-                return _buildPost(post);
-              },
-              itemCount: snapshot.data.docs.length,
+            return RefreshIndicator(
+              onRefresh: () => Future.delayed(Duration(seconds: 1)),
+              child: ListView.builder(
+                itemBuilder: (_, index) {
+                  final Post post = Post.fromDoc(snapshot.data.docs[index]);
+
+                  return PostView(
+                    post: post,
+                  );
+                },
+                itemCount: snapshot.data.docs.length,
+              ),
             );
           }),
     );

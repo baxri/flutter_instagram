@@ -163,7 +163,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           elevation: 2.0,
           title: Text(
             'Create post',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black, fontSize: 16.0),
           ),
           actions: [IconButton(icon: Icon(Icons.add), onPressed: _submit)],
         ),

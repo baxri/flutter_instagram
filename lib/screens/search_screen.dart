@@ -107,7 +107,10 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         body: _users == null
             ? Center(
-                child: Text('Let\'s type "George" to test search! ))'),
+                child: Text(
+                  'Let\'s type "George" to test search! ))',
+                  style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                ),
               )
             : FutureBuilder(
                 future: _users,
